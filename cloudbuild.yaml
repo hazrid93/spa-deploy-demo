@@ -1,10 +1,4 @@
 substitutions:
-        #_SONAR_PROJECT_PATH: #add sonar gcr project path here
-        #_SONAR_PROJECT_NAME: #project name inside sonarqube
-        #_SONAR_LOGIN: #add sonar login here if any?
-        #_SONAR_HOST_URL: #sonar host url
-        _DEPLOY_INSTANCE_NAME: #instance name for deployment target
-        _DEPLOY_INSTANCE_ZONE: #instance zone for deployment target
         _NODE_VERSION: # version for node
         _STORAGE_LOCATION: #location of bucket
         
@@ -20,39 +14,12 @@ steps:
 - name: node:${_NODE_VERSION}
   entrypoint: yarn
   args: ['build']  
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['build', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME/$BRANCH_NAME:$COMMIT_SHA', '.']
-#- name: 'gcr.io/cloud-builders/docker'
-#  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME/$BRANCH_NAME:$COMMIT_SHA']
-# Check  VM status *subsequent steps can make use of this value that is available in this build
-# Update iptables 
-#- name: 'gcr.io/cloud-builders/gcloud'
-#  entrypoint: /bin/bash
-#  args: 
-#    - '-c'
-#    - |
-#        gcloud compute instances describe ${_DEPLOY_INSTANCE_NAME} --zone ${_DEPLOY_INSTANCE_ZONE} > gce-vm-status.txt
-#        STATUS_VALUE=`grep -oP '(?<=status:).+' gce-vm-status.txt | xargs echo -n`
-#        echo $$STATUS_VALUE > gce-vm-status.txt
-#        echo "VM status is: $$STATUS_VALUE"
-#        dpkg -L iptables | grep iptables
-#        iptables -t nat -A OUTPUT -p tcp -d 10.12.192.107 -j DNAT --to-destination 172.30.0.2
-#        iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-#        iptables -t nat -L
-       # 'if [ $$STATUS_VALUE == 'RUNNING' ]; then "VM IS RUNNING" ; elif ;fi'
-# Deploy an image from Container Registry to Cloud Run 
-# wait for container optimized vm from samuel
-#- name: 'gcr.io/cloud-builders/gcloud'
-#  args:
-#  - 'compute'
-#  - 'instances'
-#  - 'update-container'
-#  - '${_DEPLOY_INSTANCE_NAME}'
-#  - '--zone'
-#  - '${_DEPLOY_INSTANCE_ZONE}'
-#  - '--container-image'
-#  - 'gcr.io/$PROJECT_ID/$REPO_NAME/$BRANCH_NAME:latest'
- # Timeout at 20 minute
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: /bin/bash
+  args:
+    - '-c'
+    - | 
+        gsutil -m rm -r gs://${_STORAGE_LOCATION}/*
 timeout: 1200s
 artifacts:
   objects:
