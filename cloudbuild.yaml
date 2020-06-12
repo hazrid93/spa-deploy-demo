@@ -19,7 +19,7 @@ steps:
   args:
     - '-c'
     - | 
-        gsutil -m rm -r gs://${_STORAGE_LOCATION}/*
+        gsutil -m rm -r gs://${_STORAGE_LOCATION}/** #https://cloud.google.com/storage/docs/gsutil/commands/rm
 timeout: 1200s
 artifacts:
   objects:
