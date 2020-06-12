@@ -21,9 +21,9 @@ steps:
     - | 
         gsutil -m rm -r gs://${_STORAGE_LOCATION}/** || true #https://cloud.google.com/storage/docs/gsutil/commands/rm
 timeout: 1200s
-artifacts:
-  objects:
-    location: 'gs://${_STORAGE_LOCATION}/'
-    paths: ['./dist/*']
+#artifacts:
+#  objects:
+#    location: 'gs://${_STORAGE_LOCATION}/'
+#    paths: ['./dist/*']
 #images: ['gcr.io/$PROJECT_ID/$REPO_NAME/$BRANCH_NAME:$COMMIT_SHA']  
   
